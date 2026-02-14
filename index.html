@@ -2,34 +2,447 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Постулаты оператора поддержки</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuizzesQuick - Рекрутинг Викторина</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            margin: 30px;
-            background-color: #f9f9f9;
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
         }
-        h1 {
-            color: #2c3e50;
-        }
-        ul {
-            background: #fff;
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
             padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
-        li {
+
+        header {
+            text-align: center;
+            padding: 50px 20px;
+        }
+
+        .logo {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .tagline {
+            font-size: 1.2em;
+            opacity: 0.9;
+            margin-bottom: 30px;
+        }
+
+        .quiz-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            margin: 40px auto;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            max-width: 500px;
+        }
+
+        .quiz-icon {
+            font-size: 3em;
+            margin-bottom: 20px;
+        }
+
+        .quiz-title {
+            font-size: 1.6em;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .quiz-description {
+            font-size: 1.1em;
+            opacity: 0.8;
+            margin-bottom: 25px;
+            line-height: 1.4;
+        }
+
+        .start-btn {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 25px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .start-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 60px;
+            padding: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        /* Стили для модальных окон */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            padding: 30px;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .progress, .timer {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+        }
+
+        .question-container {
+            margin: 30px 0;
+        }
+
+        #question-text {
+            font-size: 1.3em;
+            margin-bottom: 20px;
+            line-height: 1.4;
+        }
+
+        .option {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
             margin: 10px 0;
-            line-height: 1.5;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+
+        .option:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateX(5px);
+        }
+
+        .option.correct {
+            background: rgba(46, 204, 113, 0.3);
+            border-color: #2ecc71;
+        }
+
+        .option.incorrect {
+            background: rgba(231, 76, 60, 0.3);
+            border-color: #e74c3c;
+        }
+
+        .next-btn, .restart-btn, .home-btn {
+            background: linear-gradient(45deg, #3498db, #2980b9);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 1em;
+            cursor: pointer;
+            margin: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .restart-btn { background: linear-gradient(45deg, #f39c12, #e67e22); }
+        .home-btn { background: linear-gradient(45deg, #95a5a6, #7f8c8d); }
+
+        .next-btn:hover, .restart-btn:hover, .home-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .results-content {
+            text-align: center;
+        }
+
+        .score {
+            font-size: 1.5em;
+            margin: 20px 0;
+            font-weight: bold;
+        }
+
+        .score-message {
+            font-size: 1.2em;
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @media (max-width: 768px) {
+            .quiz-header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .logo {
+                font-size: 2em;
+            }
         }
     </style>
 </head>
 <body>
-    <h1>Три ключевых постулата оператора поддержки</h1>
-    <ul>
-        <li><strong>Эмпатия и понимание:</strong> Важно уметь слушать и ставить себя на место клиента.</li>
-        <li><strong>Быстрое и точное решение:</strong> Стремиться решить проблему эффективно и без задержек.</li>
-        <li><strong>Профессионализм и вежливость:</strong> Сохранять спокойствие и уважение в любой ситуации.</li>
-    </ul>
+    <div class="container">
+        <header>
+            <div class="logo">QuizzesQuick</div>
+            <div class="tagline">Рекрутинг викторина - проверь свои знания!</div>
+        </header>
+
+        <div class="quiz-card">
+            <div class="quiz-icon">💼</div>
+            <div class="quiz-title">Рекрутинг Викторина</div>
+            <div class="quiz-description">Ответь на ключевой вопрос о мотивации в карьере</div>
+            <button class="start-btn">Начать викторину</button>
+        </div>
+
+        <footer>
+            <p>© 2026 QuizzesQuick. Рекрутинг викторина</p>
+        </footer>
+    </div>
+
+    <!-- Модальное окно викторины -->
+    <div class="modal" id="quiz-modal">
+        <div class="modal-content">
+            <div class="quiz-header">
+                <h2 id="quiz-title">Рекрутинг Викторина</h2>
+                <div class="progress">Вопрос <span id="current-q">1</span> из <span id="total-q">1</span></div>
+                <div class="timer">Время: <span id="time-left">30</span>с</div>
+            </div>
+            <div class="question-container">
+                <h3 id="question-text">Что заставило меня сказать "я хочу быть оператором поддержки"...?</h3>
+                <div class="options-container" id="options">
+                    <div class="option">Желание помогать людям и решать их проблемы</div>
+                    <div class="option">Интерес к техническим вопросам и IT-сфере</div>
+                    <div class="option">Возможность работать в команде и развивать коммуникативные навыки</div>
+                    <div class="option">Все перечисленные варианты</div>
+                </div>
+            </div>
+            <button class="next-btn" id="next-btn" style="display: none;">Посмотреть результат</button>
+        </div>
+    </div>
+
+    <!-- Модальное окно результатов -->
+    <div class="modal" id="results-modal">
+        <div class="modal-content results-content">
+            <h2>Результаты викторины!</h2>
+            <div class="score">Ваш результат: <span id="final-score">0</span> из <span id="total-questions">1</span></div>
+            <div class="score-message" id="score-message"></div>
+            <button class="restart-btn" id="restart-btn">Пройти еще раз</button>
+            <button class="home-btn" id="home-btn">На главную</button>
+        </div>
+    </div>
+
+    <script>
+        // Данные викторины
+        const quizData = {
+            question: 'Что заставило меня сказать "я хочу быть оператором поддержки"...?',
+            options: [
+                'Желание помогать людям и решать их проблемы',
+                'Интерес к техническим вопросам и IT-сфере',
+                'Возможность работать в команде и развивать коммуникативные навыки',
+                'Все перечисленные варианты'
+            ],
+            correctAnswer: 3 // Индекс правильного ответа (все перечисленные варианты)
+        };
+
+        // Переменные для отслеживания состояния
+        let score = 0;
+        let timer;
+        let selectedAnswer = null;
+
+        // Элементы DOM
+        const quizModal = document.getElementById('quiz-modal');
+        const resultsModal = document.getElementById('results-modal');
+        const container = document.querySelector('.container');
+        const startBtn = document.querySelector('.start-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const restartBtn = document.getElementById('restart-btn');
+        const homeBtn = document.getElementById('home-btn');
+        const options = document.querySelectorAll('.option');
+        const timeLeftElement = document.getElementById('time-left');
+        const finalScoreElement = document.getElementById('final-score');
+        const scoreMessageElement = document.getElementById('score-message');
+
+        // Инициализация
+        function init() {
+            setupEventListeners();
+        }
+
+        // Настройка обработчиков событий
+        function setupEventListeners() {
+            startBtn.addEventListener('click', startQuiz);
+
+            options.forEach((option, index) => {
+                option.addEventListener('click', () => selectAnswer(index));
+            });
+
+            nextBtn.addEventListener('click', showResults);
+            restartBtn.addEventListener('click', restartQuiz);
+            homeBtn.addEventListener('click', closeResults);
+
+            // Закрытие модальных окон по клику вне контента
+            quizModal.addEventListener('click', (e) => {
+                if (e.target === quizModal) closeQuiz();
+            });
+
+            resultsModal.addEventListener('click', (e) => {
+                if (e.target === resultsModal) closeResults();
+            });
+        }
+
+        // Запуск викторины
+        function startQuiz() {
+            container.style.display = 'none';
+            quizModal.style.display = 'block';
+            score = 0;
+            selectedAnswer = null;
+
+            // Сброс стилей вариантов ответов
+            options.forEach(option => {
+                option.classList.remove('correct', 'incorrect');
+                option.style.pointerEvents = 'auto';
+            });
+
+            nextBtn.style.display = 'none';
+            startTimer();
+        }
+
+        // Таймер
+        function startTimer() {
+            let timeLeft = 30;
+            timeLeftElement.textContent = timeLeft;
+
+            if (timer) clearInterval(timer);
+
+            timer = setInterval(() => {
+                timeLeft--;
+                timeLeftElement.textContent = timeLeft;
+
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    handleTimeUp();
+                }
+            }, 1000);
+        }
+
+        // Выбор ответа
+        function selectAnswer(index) {
+            clearInterval(timer);
+            selectedAnswer = index;
+
+            options.forEach((option, i) => {
+                option.style.pointerEvents = 'none';
+
+                if (i === quizData.correctAnswer) {
+                    option.classList.add('correct');
+                } else if (i === index) {
+                    option.classList.add('incorrect');
+                }
+            });
+
+            // Проверка ответа
+            if (index === quizData.correctAnswer) {
+                score = 1;
+            }
+
+            nextBtn.style.display = 'block';
+        }
+
+        // Время вышло
+        function handleTimeUp() {
+            options.forEach((option, i) => {
+                option.style.pointerEvents = 'none';
+                if (i === quizData.correctAnswer) {
+                    option.classList.add('correct');
+                }
+            });
+            nextBtn.style.display = 'block';
+        }
+
+        // Показать результаты
+        function showResults() {
+            quizModal.style.display = 'none';
+            resultsModal.style.display = 'block';
+
+            finalScoreElement.textContent = score;
+
+            if (score === 1) {
+                scoreMessageElement.textContent = '🎉 Правильно! Все варианты являются важными мотиваторами для работы в поддержке!';
+                scoreMessageElement.style.background = 'rgba(46, 204, 113, 0.2)';
+            } else {
+                scoreMessageElement.textContent = '💪 Почти угадали! Правильный ответ: "Все перечисленные варианты" - все эти факторы важны для работы в поддержке.';
+                scoreMessageElement.style.background = 'rgba(231, 76, 60, 0.2)';
+            }
+        }
+
+        // Перезапуск викторины
+        function restartQuiz() {
+            resultsModal.style.display = 'none';
+            startQuiz();
+        }
+
+        // Закрыть викторину
+        function closeQuiz() {
+            quizModal.style.display = 'none';
+            container.style.display = 'block';
+            if (timer) clearInterval(timer);
+        }
+
+        // Закрыть результаты
+        function closeResults() {
+            resultsModal.style.display = 'none';
+            container.style.display = 'block';
+        }
+
+        // Запуск при загрузке страницы
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
 </body>
-</html>
+                </html>
