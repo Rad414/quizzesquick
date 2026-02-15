@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Пройти викторину — QuizzesQuick</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>🧠 Пройдите викторину</h1>
+    <p>Выберите викторину из списка и проверьте свои знания!</p>
+
+    <div class="quiz-container">
+      <select id="quiz-select" style="width: 100%; padding: 12px; margin-bottom: 20px; font-size: 1rem;">
+        <option value="">— Выберите викторину —</option>
+      </select>
+
+      <div id="quiz-content" style="display: none;">
+        <h2 id="quiz-title"></h2>
+        <p id="quiz-description"></p>
+        <p><strong>Тема:</strong> <span id="quiz-topic"></span></p>
+        <div id="questions"></div>
+        <button id="submit-quiz" class="btn btn-primary">✅ Отправить ответы</button>
+      </div>
+
+      <div id="result" style="display: none;">
+        <div class="result" id="score"></div>
+        <button id="restart-quiz" class="btn-large btn-primary">🔄 Пройти ещё раз</button>
+      </div>
+    </div>
+
+    <a href="index.html" class="btn btn-secondary" style="margin-top: 30px;">← Назад</a>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
