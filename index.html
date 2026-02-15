@@ -1,10 +1,12 @@
 <!DOCTYPE html>
-< html lang="ru">
+<html lang="ru">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>QuizzesQuick — Создавай и проходи викторины</title>
   <link rel="stylesheet" href="style.css">
+  <meta name="description" content="Создавай и проходи викторины онлайн без регистрации. Бесплатно и локально в браузере!">
+  <link rel="icon" href="favicon.ico" type="image/x-icon"> <!-- Добавьте favicon.ico в папку, если нет -->
 </head>
 <body>
   <div class="container">
@@ -12,11 +14,11 @@
       <h1>✨ QuizzesQuick</h1>
       <p>Создавай викторины за минуту — проходи с удовольствием!</p>
     </header>
-    <div class="buttons">
-      <a href="creator.html" class="btn btn-primary">➕ Создать викторину</a>
-      <a href="quiz.html" class="btn btn-secondary">🎮 Пройти викторину</a>
-    </div>
-    <div class="features">
+    <nav class="buttons"> <!-- Изменено с <div> на <nav> для соответствия CSS -->
+      <a href="creator.html" class="btn btn-primary" aria-label="Перейти к созданию викторины">➕ Создать викторину</a>
+      <a href="quiz.html" class="btn btn-secondary" aria-label="Перейти к прохождению викторины">🎮 Пройти викторину</a>
+    </nav>
+    <main class="features"> <!-- Изменено с <div> на <main> для соответствия CSS -->
       <h3>Почему QuizzesQuick?</h3>
       <ul>
         <li>Без регистрации — всё локально в браузере</li>
@@ -24,8 +26,8 @@
         <li>Сохраняй свои викторины навсегда</li>
         <li>Делись ссылкой с друзьями</li>
       </ul>
-    </div>
+    </main>
   </div>
- <script src="script.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
