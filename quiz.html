@@ -16,13 +16,15 @@
         <option value="">— Выберите викторину —</option>
       </select>
 
-      <div id="quiz-content" style="display: none;">
-        <h2 id="quiz-title"></h2>
-        <p id="quiz-description"></p>
-        <p><strong>Тема:</strong> <span id="quiz-topic"></span></p>
-        <div id="questions"></div>
-        <button id="submit-quiz" class="btn btn-primary">✅ Отправить ответы</button>
-      </div>
+      <form id="quiz-form">
+        <div id="quiz-content" style="display: none;">
+          <h2 id="quiz-title"></h2>
+          <p id="quiz-description"></p>
+          <p><strong>Тема:</strong> <span id="quiz-topic"></span></p>
+          <div id="questions"></div>
+          <button id="submit-quiz" class="btn btn-primary" type="submit">✅ Отправить ответы</button>
+        </div>
+      </form>
 
       <div id="result" style="display: none;">
         <div class="result" id="score"></div>
