@@ -136,4 +136,5 @@ quizzesquick/
 ## Контакты
 
 * Автор: Rad414
-* Профиль GitHub: [Rad414](https://github.com/Rad414)
+* Профиль GitHub:[Rad414](https://github.com/Rad414)
+
