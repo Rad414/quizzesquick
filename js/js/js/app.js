@@ -169,3 +169,4 @@ function initQuiz() {
 
   // Логика прохождения викторины (упрощённо)
   function renderQuizForAttempt(quizData
+document.addEventListener('DOMContentLoaded', initCreator);
