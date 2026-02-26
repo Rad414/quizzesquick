@@ -9,7 +9,7 @@ function initCreator() {
 
   if (!addBtn || !saveBtn) return;
 
-  // Обработчик добавления вопроса (из старого скрипта)
+  // Обработчик добавления вопроса
   addBtn.addEventListener('click', () => {
     const questionDiv = document.createElement('div');
     questionDiv.className = 'question-form';
@@ -49,7 +49,7 @@ function initCreator() {
     });
   });
 
-  // Обработчик сохранения викторины — теперь шифруем в URL
+  // Обработчик сохранения викторины
   saveBtn.addEventListener('click', () => {
     const title = document.getElementById('title').value.trim();
     const description = document.getElementById('description').value.trim();
@@ -166,7 +166,26 @@ function initQuiz() {
   } else {
     alert('Викторина не найдена. Убедитесь, что ссылка верна.');
   }
+}
 
-  // Логика прохождения викторины (упрощённо)
-  function renderQuizForAttempt(quizData
-document.addEventListener('DOMContentLoaded', initCreator);
+// Отрисовка викторины для прохождения
+function renderQuizForAttempt(quizData) {
+  const quizContent = document.getElementById('quiz-content');
+  quizContent.innerHTML = `
+    <h2>${quizData.title}</h2>
+    <p><strong>Тема:</strong> ${quizData.topic}</p>
+    ${quizData.description ? `<p><strong>Описание:</strong> ${quizData.description}</p>` : ''}
+    <form id="quiz-form">
+      ${quizData.questions.map((q, index) => `
+        <div class="quiz-question">
+          <h3>Вопрос ${index + 1}:</h3>
+          <p>${q.question}</p>
+          ${q.answers.map((answer, ansIndex) => `
+            <div>
+              <input type="radio" name="q${index}" value="${ansIndex}" id="q${index}-a${ansIndex}" required>
+              <label for="q${index}-a${ansIndex}">${answer}</label>
+            </div>
+          `).join('')}
+        </div>
+      `).join('')}
+      <button type="button" id="submit-quiz">
