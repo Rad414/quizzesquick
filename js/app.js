@@ -87,7 +87,6 @@ function initCreator() {
       const encryptedData = btoa(encodeURIComponent(JSON.stringify(quiz)));
       const quizUrl = `${window.location.origin}${window.location.pathname.replace('creator.html', 'quiz.html')}?quiz=${encryptedData}`;
 
-
       // Показываем ссылку пользователю
       const linkContainer = document.getElementById('share-link-container');
       if (linkContainer) {
@@ -107,26 +106,170 @@ function initCreator() {
   });
 }
 
-// Функция копирования в буфер обмена
-function copyToClipboard(text) {
-  navigator.clipboard.writeText(text).then(() => {
-    alert('Ссылка скопирована в буфер обмена!');
-  }).catch(err => {
-    console.error('Ошибка копирования:', err);
-    // Резервный вариант для старых браузеров
-    const textArea = document.createElement('textarea');
-    textArea.value = text;
-    document.body.appendChild(textArea);
-    textArea.select();
-    document.execCommand('copy');
-    document.body.removeChild(textArea);
-    alert('Ссылка скопирована (через резервный метод)');
-  });
+// Функция инициализации страницы прохождения викторины
+function initQuiz() {
+  const quizDisplay = document.getElementById('quiz-display');
+  const resultArea = document.getElementById('result-area');
+
+  if (!quizDisplay || !resultArea) {
+    console.error('Не найдены элементы для отображения викторины');
+    return;
+  }
+
+  // Проверяем, есть ли данные викторины в URL
+  const urlParams = new URLSearchParams(window.location.search);
+  const encryptedQuiz = urlParams.get('quiz');
+
+  if (encryptedQuiz) {
+    try {
+      // Декодируем данные
+      const decodedData = decodeURIComponent(atob(encryptedQuiz));
+      const quiz = JSON.parse(decodedData);
+
+      // Отображаем викторину
+      renderQuiz(quiz, quizDisplay, resultArea);
+    } catch (error) {
+      console.error('Ошибка загрузки викторины:', error);
+      quizDisplay.innerHTML = '<p>Не удалось загрузить викторину. Проверьте ссылку.</p>';
+    }
+  } else {
+    // Если нет данных в URL, проверяем localStorage
+    const savedQuiz = localStorage.getItem('currentQuiz');
+    if (savedQuiz) {
+      try {
+        const quiz = JSON.parse(savedQuiz);
+        renderQuiz(quiz, quizDisplay, resultArea);
+      } catch (error) {
+        console.error('Ошибка чтения из localStorage:', error);
+        quizDisplay.innerHTML = '<p>Сохранённая викторина повреждена.</p>';
+      }
+    } else {
+      quizDisplay.innerHTML = '<p>Викторина не найдена. Создайте новую!</p>';
+    }
+  }
 }
 
+// Функция отображения викторины для прохождения
+function renderQuiz(quiz, displayElement, resultElement) {
+  displayElement.innerHTML = `
+    <h2>${quiz.title}</h2>
+    <p><strong>Тема:</strong> ${quiz.topic}</p>
+    ${quiz.description ? `<p><strong>Описание:</strong> ${quiz.description}</p>` : ''}
+    <form id="attempt-form">
+      ${quiz.questions.map((q, index) => `
+        <div class="quiz-question">
+          <h3>${index + 1}. ${q.question}</h3>
+          ${q.answers.map((answer, ansIndex) => `
+            <div>
+              <input type="radio" name="q${index}" id="q${index}-a${ansIndex}" value="${ansIndex}">
+              <label for="q${index}-a${ansIndex}">${answer}</label>
+            </div>
+          `).join('')}
+        </div>
+      `).join('')}
+      <button type="button" id="submit-quiz" class="btn btn-primary">Проверить ответы</button>
+    </form>
+  `;
+
+  // Обработчик проверки ответов
+  const submitBtn = displayElement.querySelector('#submit-quiz');
+  submitBtn.addEventListener('click', () => {
+    let score = 0;
+    quiz.questions.forEach((q, index) => {
+      // Функция инициализации страницы прохождения викторины
+function initQuiz() {
+  const quizDisplay = document.getElementById('quiz-display');
+  const resultArea = document.getElementById('result-area');
+
+  if (!quizDisplay || !resultArea) {
+    console.error('Не найдены элементы для отображения викторины');
+    return;
+  }
+
+  // Проверяем, есть ли данные викторины в URL
+  const urlParams = new URLSearchParams(window.location.search);
+  const encryptedQuiz = urlParams.get('quiz');
+
+  if (encryptedQuiz) {
+    try {
+      // Декодируем данные
+      const decodedData = decodeURIComponent(atob(encryptedQuiz));
+      const quiz = JSON.parse(decodedData);
+
+      // Отображаем викторину
+      renderQuiz(quiz, quizDisplay, resultArea);
+    } catch (error) {
+      console.error('Ошибка загрузки викторины:', error);
+      quizDisplay.innerHTML = '<p>Не удалось загрузить викторину. Проверьте ссылку.</p>';
+    }
+  } else {
+    // Если нет данных в URL, проверяем localStorage
+    const savedQuiz = localStorage.getItem('currentQuiz');
+    if (savedQuiz) {
+      try {
+        const quiz = JSON.parse(savedQuiz);
+        renderQuiz(quiz, quizDisplay, resultArea);
+      } catch (error) {
+        console.error('Ошибка чтения из localStorage:', error);
+        quizDisplay.innerHTML = '<p>Сохранённая викторина повреждена.</p>';
+      }
+    } else {
+      quizDisplay.innerHTML = '<p>Викторина не найдена. Создайте новую!</p>';
+    }
+  }
+}
+
+// Функция отображения викторины для прохождения
+function renderQuiz(quiz, displayElement, resultElement) {
+  displayElement.innerHTML = `
+    <h2>${quiz.title}</h2>
+    <p><strong>Тема:</strong> ${quiz.topic}</p>
+    ${quiz.description ? `<p><strong>Описание:</strong> ${quiz.description}</p>` : ''}
+    <form id="attempt-form">
+      ${quiz.questions.map((q, index) => `
+        <div class="quiz-question">
+          <h3>${index + 1}. ${q.question}</h3>
+          ${q.answers.map((answer, ansIndex) => `
+            <div>
+              <input type="radio" name="q${index}" id="q${index}-a${ansIndex}" value="${ansIndex}">
+              <label for="q${index}-a${ansIndex}">${answer}</label>
+            </div>
+          `).join('')}
+        </div>
+      `).join('')}
+      <button type="button" id="submit-quiz" class="btn btn-primary">Проверить ответы</button>
+    </form>
+  `;
+
+  // Обработчик проверки ответов
+  const submitBtn = displayElement.querySelector('#submit-quiz');
+  submitBtn.addEventListener('click', () => {
+    let score = 0;
+    const totalQuestions = quiz.questions.length;
+
+    quiz.questions.forEach((q, index) => {
+      const selectedAnswer = document.querySelector(`input[name="q${index}"]:checked`);
+      if (selectedAnswer && parseInt(selectedAnswer.value) === q.correct) {
+        score++;
+      }
+    });
+
+    // Показываем результат
+    resultElement.innerHTML = `
+      <div class="result">
+        <h3>Результаты</h3>
+        <p>Вы ответили правильно на ${score} из ${totalQuestions} вопросов.</p>
+        <p>Оценка: ${Math.round((score / totalQuestions) * 100)}%</p>
+        <button onclick="location.reload()" class="btn">Пройти ещё раз</button>
+      </div>
+    `;
+  });
+}
 // Инициализируем при загрузке страницы
 document.addEventListener('DOMContentLoaded', () => {
   if (document.title.includes('Создать')) {
     initCreator();
+  } else if (document.title.includes('Прохождение')) {
+    initQuiz();
   }
 });
