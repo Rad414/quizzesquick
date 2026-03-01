@@ -79,10 +79,36 @@ function initCreator() {
       questions: questions
     };
 
-    // В реальном проекте здесь будет шифрование и генерация ссылки
-    alert('Викторина сохранена!\n' + JSON.stringify(quiz, null, 2));
-  });
-}
+    saveBtn.addEventListener('click', () => {
+  // ... существующий код сбора данных ...
+
+  if (questions.length === 0) {
+    alert('Добавьте хотя бы один вопрос с заполненными полями!');
+    return;
+  }
+
+  const quiz = {
+    id: Date.now().toString(),
+    title: title,
+    topic: topic,
+    questions: questions
+  };
+
+  // Сохраняем в localStorage
+  localStorage.setItem('currentQuiz', JSON.stringify(quiz));
+
+  // Формируем ссылку для прохождения
+  const quizUrl = window.location.origin + window.location.pathname.replace('creator.html', 'quiz.html');
+
+  // Показываем ссылку пользователю
+  const linkContainer = document.getElementById('share-link-container');
+  linkContainer.innerHTML = `
+    <p>Викторина сохранена! Поделитесь этой ссылкой:</p>
+    <input type="text" value="${quizUrl}" readonly>
+    <button onclick="copyToClipboard('${quizUrl}')">Копировать ссылку</button>
+  `;
+});
+
 
 // Инициализируем при загрузке страницы
 document.addEventListener('DOMContentLoaded', () => {
