@@ -168,11 +168,3 @@ function initQuiz() {
   }
 }
 
-// Функция отображения викторины для прохождения
-function renderQuiz(quiz, displayElement, resultElement) {
-  displayElement.innerHTML = `
-    <h2>${quiz.title}</h2>
-    <p><strong>Тема:</strong> ${quiz.topic}</p>
-    ${quiz.description ? `<p><strong>Описание:</strong> ${quiz.description}</p>` : ''}
-    <form id="attempt-form">
-      ${quiz.questions.map((q, index) => `
