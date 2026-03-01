@@ -7,7 +7,7 @@ function initCreator() {
   const saveBtn = document.getElementById('save-quiz');
   const container = document.getElementById('questions-container');
 
-  if (!addBtn || !saveBtn) return;
+  if (!addBtn || !saveBtn || !container) return;
 
   // Обработчик добавления вопроса
   addBtn.addEventListener('click', () => {
@@ -115,6 +115,7 @@ function initCreator() {
       const currentUrl = window.location.origin + window.location.pathname.replace('creator.html', 'quiz.html');
       const quizUrl = `${currentUrl}?quiz=${encryptedData}`;
 
+
       // Показываем ссылку пользователю
       displayShareLink(quizUrl);
     } catch (e) {
@@ -145,12 +146,12 @@ function copyToClipboard(text) {
 // Функция инициализации страницы прохождения викторины
 function initQuiz() {
   const content = document.getElementById('quiz-content');
-  const result = document.getElementById('result');
+  const resultArea = document.getElementById('result-area'); // Исправлено: было 'result'
   const submitBtn = document.getElementById('submit-quiz');
   const restartBtn = document.getElementById('restart-quiz');
   const form = document.getElementById('quiz-form');
 
-  if (!content || !result || !submitBtn || !restartBtn || !form) return;
+  if (!content || !resultArea || !submitBtn || !restartBtn || !form) return;
 
   // Проверяем, есть ли данные викторины в URL
   const urlParams = new URLSearchParams(window.location.search);
@@ -178,14 +179,4 @@ function renderQuizForAttempt(quizData) {
     <form id="quiz-form">
       ${quizData.questions.map((q, index) => `
         <div class="quiz-question">
-          <h3>Вопрос ${index + 1}:</h3>
-          <p>${q.question}</p>
-          ${q.answers.map((answer, ansIndex) => `
-            <div>
-              <input type="radio" name="q${index}" value="${ansIndex}" id="q${index}-a${ansIndex}" required>
-              <label for="q${index}-a${ansIndex}">${answer}</label>
-            </div>
-          `).join('')}
-        </div>
-      `).join('')}
-      <button type="button" id="submit-quiz">
+          <h3>Вопрос ${index +
