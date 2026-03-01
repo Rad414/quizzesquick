@@ -106,49 +106,6 @@ function initCreator() {
   });
 }
 
-// Функция инициализации страницы прохождения викторины
-function initQuiz() {
-  const quizDisplay = document.getElementById('quiz-display');
-  const resultArea = document.getElementById('result-area');
-
-  if (!quizDisplay || !resultArea) {
-    console.error('Не найдены элементы для отображения викторины');
-    return;
-  }
-
-  // Проверяем, есть ли данные викторины в URL
-  const urlParams = new URLSearchParams(window.location.search);
-  const encryptedQuiz = urlParams.get('quiz');
-
-  if (encryptedQuiz) {
-    try {
-      // Декодируем данные
-      const decodedData = decodeURIComponent(atob(encryptedQuiz));
-      const quiz = JSON.parse(decodedData);
-
-      // Отображаем викторину
-      renderQuiz(quiz, quizDisplay, resultArea);
-    } catch (error) {
-      console.error('Ошибка загрузки викторины:', error);
-      quizDisplay.innerHTML = '<p>Не удалось загрузить викторину. Проверьте ссылку.</p>';
-    }
-  } else {
-    // Если нет данных в URL, проверяем localStorage
-    const savedQuiz = localStorage.getItem('currentQuiz');
-    if (savedQuiz) {
-      try {
-        const quiz = JSON.parse(savedQuiz);
-        renderQuiz(quiz, quizDisplay, resultArea);
-      } catch (error) {
-        console.error('Ошибка чтения из localStorage:', error);
-        quizDisplay.innerHTML = '<p>Сохранённая викторина повреждена.</p>';
-      }
-    } else {
-      quizDisplay.innerHTML = '<p>Викторина не найдена. Создайте новую!</p>';
-    }
-  }
-}
-
 // Функция отображения викторины для прохождения
 function renderQuiz(quiz, displayElement, resultElement) {
   displayElement.innerHTML = `
