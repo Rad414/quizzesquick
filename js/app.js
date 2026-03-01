@@ -76,6 +76,7 @@ function initCreator() {
       id: Date.now().toString(),
       title: title,
       topic: topic,
+      description: document.getElementById('description').value.trim(),
       questions: questions
     };
 
@@ -106,34 +107,7 @@ function initCreator() {
   });
 }
 
-// Функция отображения викторины для прохождения
-function renderQuiz(quiz, displayElement, resultElement) {
-  displayElement.innerHTML = `
-    <h2>${quiz.title}</h2>
-    <p><strong>Тема:</strong> ${quiz.topic}</p>
-    ${quiz.description ? `<p><strong>Описание:</strong> ${quiz.description}</p>` : ''}
-    <form id="attempt-form">
-      ${quiz.questions.map((q, index) => `
-        <div class="quiz-question">
-          <h3>${index + 1}. ${q.question}</h3>
-          ${q.answers.map((answer, ansIndex) => `
-            <div>
-              <input type="radio" name="q${index}" id="q${index}-a${ansIndex}" value="${ansIndex}">
-              <label for="q${index}-a${ansIndex}">${answer}</label>
-            </div>
-          `).join('')}
-        </div>
-      `).join('')}
-      <button type="button" id="submit-quiz" class="btn btn-primary">Проверить ответы</button>
-    </form>
-  `;
-
-  // Обработчик проверки ответов
-  const submitBtn = displayElement.querySelector('#submit-quiz');
-  submitBtn.addEventListener('click', () => {
-    let score = 0;
-    quiz.questions.forEach((q, index) => {
-      // Функция инициализации страницы прохождения викторины
+// Функция инициализации страницы прохождения викторины
 function initQuiz() {
   const quizDisplay = document.getElementById('quiz-display');
   const resultArea = document.getElementById('result-area');
@@ -215,18 +189,4 @@ function renderQuiz(quiz, displayElement, resultElement) {
     resultElement.innerHTML = `
       <div class="result">
         <h3>Результаты</h3>
-        <p>Вы ответили правильно на ${score} из ${totalQuestions} вопросов.</p>
-        <p>Оценка: ${Math.round((score / totalQuestions) * 100)}%</p>
-        <button onclick="location.reload()" class="btn">Пройти ещё раз</button>
-      </div>
-    `;
-  });
-}
-// Инициализируем при загрузке страницы
-document.addEventListener('DOMContentLoaded', () => {
-  if (document.title.includes('Создать')) {
-    initCreator();
-  } else if (document.title.includes('Прохождение')) {
-    initQuiz();
-  }
-});
+        <p>Вы ответили правильно на ${score} из ${totalQuestions}
