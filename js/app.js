@@ -76,7 +76,6 @@ function initCreator() {
       id: Date.now().toString(),
       title: title,
       topic: topic,
-      description: document.getElementById('description').value.trim(),
       questions: questions
     };
 
@@ -189,4 +188,10 @@ function renderQuiz(quiz, displayElement, resultElement) {
     resultElement.innerHTML = `
       <div class="result">
         <h3>Результаты</h3>
-        <p>Вы ответили правильно на ${score} из ${totalQuestions}
+        <p>Вы ответили правильно на ${score} из ${totalQuestions} вопросов.</p>
+        <p>Оценка: ${Math.round((score / totalQuestions) * 100)}%</p>
+        <button onclick="location.reload()" class="btn">Пройти ещё раз</button>
+      </div>
+    `;
+  });
+}
